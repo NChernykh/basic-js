@@ -45,6 +45,32 @@ function transform(arr) {
     return newArr;
   }
 
+  const doubleDiscarded = () => {
+    let newArr = arr.slice();
+    let index = newArr.findIndex(item => item === '--discard-next');
+    index === newArr.length - 1 ? newArr.splice(index, 1) : newArr.splice(index, 2);
+
+    let index2 = arr.findIndex(item => typeof item === 'string');
+    newArr.splice(index2, 1);
+    return newArr;
+  }
+
+  const doubleDoubled = () => {
+    let newArr = arr.slice();
+    let index = newArr.findIndex(item => item === '--double-next');
+    let item = newArr[index + 1];
+    index === newArr.length - 1 ? newArr.splice(index, 1) : newArr.splice(index, 1, item, item);
+    let index2 = newArr.findIndex(item => typeof item === 'string');
+    newArr.splice(index2, 1);
+    return newArr;
+  }
+
+  const discardDoubled = () => {
+    let newArr = arr.slice();
+    let res = newArr.filter(item => typeof item === 'number')
+    return res;
+  }
+
   if (!Array.isArray(arr)) {
     throw Error(`'arr' parameter must be an instance of the Array!`)
   } else if (arr.length === 0) {
@@ -52,6 +78,18 @@ function transform(arr) {
   } else if (!arr.includes('--double-next') && !arr.includes('--double-prev') && !arr.includes('--discard-next') && !arr.includes('--discard-prev')) {
     return arr;
   } else {
+    if (arr.indexOf('--discard-next') + 2 === arr.indexOf('--double-prev')) {
+      return doubleDiscarded();
+    }
+    if (arr.indexOf('--discard-next') + 2 === arr.indexOf('--discard-prev')) {
+      return doubleDiscarded();
+    }
+    if (arr.indexOf('--double-next') + 2 === arr.indexOf('--double-prev')) {
+      return doubleDoubled();
+    }
+    if (arr.indexOf('--double-next') + 2 === arr.indexOf('--discard-prev')) {
+      return discardDoubled();
+    }
     if (arr.includes('--double-next')) {
       return doubleNext();
     }
@@ -71,4 +109,4 @@ module.exports = {
   transform
 };
 
-console.log(transform([1, 2, 3, '--discard-next', 1337, '--double-prev', 4, 5]))
+console.log(transform(['--double-prev', 1, true, true]))

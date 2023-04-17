@@ -15,6 +15,9 @@ function getSeason(date) {
   if (arguments.length === 0) {
     return 'Unable to determine the time of year!';
   } else if (!isNaN(Date.parse(date))) {
+    if (date.toString() == Date.prototype.toString.call(new Date())) {
+      throw Error('Invalid date!')
+    }
     let month = date.getMonth();
     if (month >= 2 && month < 5) {
       return 'spring';
@@ -33,3 +36,5 @@ function getSeason(date) {
 module.exports = {
   getSeason
 };
+
+console.log(getSeason(new Date(1456, 0, 2, 1, 50, 9, 238)))

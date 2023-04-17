@@ -22,37 +22,25 @@ function repeater(str, options) {
   if (typeof options.addition !== 'string') {
     String(options.addition)
   }
-  let newStr = '';
-  
-  if (options.repeatTimes) {
-    let separatorLength = 1;
-    for (let i = 0; i < options.repeatTimes; i++) {
-      if (options.addition && options.additionSeparator && options.separator ) {
-        newStr += str + options.addition + options.additionSeparator + options.separator;
-        separatorLength = options.separator.length + options.additionSeparator.length;
-      }
-      if (options.addition && !options.additionSeparator && options.separator ) {
-        newStr += str + options.addition + options.separator;
-        separatorLength = options.separator.length;
-      }
-      if (options.addition && !options.separator) {
-        newStr += str + options.addition + '+';
-      }
-      if (!options.addition && options.separator) {
-        newStr += str + options.separator;
-        separatorLength = options.separator.length;
-      }
-      if (!options.addition && !options.separator) {
-        newStr += str + '+';
-      }
+
+  if (!options.separator) options.separator = "+";
+  if (!options.additionSeparator) options.additionSeparator = "|";
+
+  const repeat = (separator, addition = '', repeatTimes = 1) => {
+    let newArr = [];
+    for (let i = 0; i < repeatTimes; i++) {
+      newArr.push(String(addition));
     }
-    return newStr.slice(0, -separatorLength);
-  } else {
-    newStr = str + options.addition;
-    return newStr
+    return newArr.join(separator);
   }
+
+  const addition = repeat(options.additionSeparator, options.addition, options.additionRepeatTimes);
+  const fullSeparator = addition + options.separator;
+  return repeat(fullSeparator, str, options.repeatTimes) + addition;
 }
 
 module.exports = {
   repeater
 };
+
+console.log(repeater('STRING', { repeatTimes: 3, separator: '**', addition: 'PLUS', additionRepeatTimes: 3, additionSeparator: '00' }))
